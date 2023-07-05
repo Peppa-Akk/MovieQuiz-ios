@@ -11,18 +11,17 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private var currentQuestion: QuizQuestion?
     private var correctAnswers: Int = 0
 
+    //MARK: - init
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         statisticService = StatisticServiceImplementation()
 
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
-        viewController.showLoadingIndicator()
         questionFactory?.loadData()
+        viewController.showLoadingIndicator()
     }
 
-
     //MARK: - QuestionFactoryDelegate
-    
     func didLoadDataFromServer() {
         viewController?.hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
@@ -122,7 +121,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
 
     func proceedToNextQuestionOrResults() {
-        if self.isLastQuestion() {
+        if isLastQuestion() {
             let text = "Вы ответили на \(correctAnswers) из 10, попробуйте еще раз!"
 
             let viewModel = QuizResultsViewModel(
@@ -131,7 +130,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
                 buttonText: "Сыграть ещё раз")
             viewController?.show(quiz: viewModel)
         } else {
-            self.switchToNextQuestion()
+            switchToNextQuestion()
             questionFactory?.requestNextQuestion()
         }
     }
